@@ -31,6 +31,8 @@ export type RenderOptions = {
   clientManifest?: ClientManifest;
   serializer?: Function;
   runInNewContext?: boolean | 'once';
+  assetRenderer?: (type: 'script' | 'style' | 'prefetch', file: string, publicPath: string) => string;
+  preloadExtraRenderer?: (file: string, publicPath: string) => string;
 };
 
 export function createRenderer ({
@@ -43,7 +45,9 @@ export function createRenderer ({
   shouldPreload,
   shouldPrefetch,
   clientManifest,
-  serializer
+  serializer,
+  assetRenderer,
+  preloadExtraRenderer,
 }: RenderOptions = {}): Renderer {
   const render = createRenderFunction(modules, directives, isUnaryTag, cache)
   const templateRenderer = new TemplateRenderer({
@@ -52,7 +56,9 @@ export function createRenderer ({
     shouldPreload,
     shouldPrefetch,
     clientManifest,
-    serializer
+    serializer,
+    assetRenderer,
+    preloadExtraRenderer,
   })
 
   return {

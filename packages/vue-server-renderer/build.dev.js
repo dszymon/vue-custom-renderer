@@ -9162,6 +9162,8 @@ function createRenderer (ref) {
   var shouldPrefetch = ref.shouldPrefetch;
   var clientManifest = ref.clientManifest;
   var serializer = ref.serializer;
+  var assetRenderer = ref.assetRenderer;
+  var preloadExtraRenderer = ref.preloadExtraRenderer;
 
   var render = createRenderFunction(modules, directives, isUnaryTag, cache);
   var templateRenderer = new TemplateRenderer({
@@ -9170,7 +9172,9 @@ function createRenderer (ref) {
     shouldPreload: shouldPreload,
     shouldPrefetch: shouldPrefetch,
     clientManifest: clientManifest,
-    serializer: serializer
+    serializer: serializer,
+    assetRenderer: assetRenderer,
+    preloadExtraRenderer: preloadExtraRenderer,
   });
 
   return {

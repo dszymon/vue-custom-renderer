@@ -1,6 +1,6 @@
 {
-  "name": "@szymek/vue-server-renderer",
-  "version": "2.6.12-custom-render.1",
+  "name": "@dszymon/vue-server-renderer",
+  "version": "2.6.12-custom-render.2",
   "description": "server renderer for Vue 2.0",
   "main": "index.js",
   "types": "types/index.d.ts",
