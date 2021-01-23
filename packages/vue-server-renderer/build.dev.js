@@ -8869,12 +8869,16 @@ var serialize = require('serialize-javascript');
 
 
 
+
+
 var TemplateRenderer = function TemplateRenderer (options) {
+  var this$1 = this;
+
   this.options = options;
   this.inject = options.inject !== false;
   // if no template option is provided, the renderer is created
   // as a utility object for rendering assets like preload links and scripts.
-    
+
   var template = options.template;
   this.parsedTemplate = template
     ? typeof template === 'string'
@@ -8899,6 +8903,18 @@ var TemplateRenderer = function TemplateRenderer (options) {
     this.prefetchFiles = (clientManifest.async || []).map(normalizeFile);
     // initial async chunk mapping
     this.mapFiles = createMapper(clientManifest);
+  }
+
+  if (options.assetRenderer) {
+    var rendererFactory = function (type) { return function (file) { return this$1.options.assetRenderer(type, file, this$1.publicPath); }; };
+    this.stylesRenderer = rendererFactory('style');
+    this.scriptsRenderer = rendererFactory('script');
+    this.prefetchRenderer = rendererFactory('prefetch');
+  }
+  else {
+    this.stylesRenderer = function (file) { return ("<link rel=\"stylesheet\" href=\"" + (this$1.publicPath) + file + "\">"); };
+    this.scriptsRenderer = function (file) { return ("<script src=\"" + (this$1.publicPath) + file + "\" defer></script>"); };
+    this.prefetchRenderer = function (file) { return ("<link rel=\"prefetch\" href=\"" + (this$1.publicPath) + file + "\">"); };
   }
 };
 
@@ -8961,7 +8977,7 @@ TemplateRenderer.prototype.renderStyles = function renderStyles (context) {
       ? cssFiles.map(function (ref) {
           var file = ref.file;
 
-          return ("<link rel=\"stylesheet\" href=\"" + (this$1.publicPath) + file + "\">");
+          return this$1.stylesRenderer(file);
     }).join('')
       : '') +
     // context.styles is a getter exposed by vue-style-loader which contains
@@ -9007,6 +9023,11 @@ TemplateRenderer.prototype.renderPreloadLinks = function renderPreloadLinks (con
       if (asType === 'font') {
         extra = " type=\"font/" + extension + "\" crossorigin";
       }
+
+      if (this$1.options.preloadExtraRenderer) {
+        extra = " " + (this$1.options.preloadExtraRenderer(file, this$1.publicPath));
+      }
+
       return ("<link rel=\"preload\" href=\"" + (this$1.publicPath) + file + "\"" + (asType !== '' ? (" as=\"" + asType + "\"") : '') + extra + ">")
     }).join('')
   } else {
@@ -9034,7 +9055,7 @@ TemplateRenderer.prototype.renderPrefetchLinks = function renderPrefetchLinks (c
       if (alreadyRendered(file)) {
         return ''
       }
-      return ("<link rel=\"prefetch\" href=\"" + (this$1.publicPath) + file + "\">")
+      return this$1.prefetchRenderer(file);
     }).join('')
   } else {
     return ''
@@ -9071,7 +9092,7 @@ TemplateRenderer.prototype.renderScripts = function renderScripts (context) {
     return needed.map(function (ref) {
         var file = ref.file;
 
-      return ("<script src=\"" + (this$1.publicPath) + file + "\" defer></script>")
+      return this$1.scriptsRenderer(file);
     }).join('')
   } else {
     return ''

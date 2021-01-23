@@ -1,6 +1,6 @@
 /*!
- * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * Vue.js v2.6.12-custom-render.1
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 'use strict';
@@ -5430,7 +5430,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.6.12';
+Vue.version = '2.6.12-custom-render.1';
 
 /*  */
 
