@@ -4,7 +4,7 @@ try {
 
 var packageName = require('./package.json').name
 var packageVersion = require('./package.json').version
-if (vueVersion && vueVersion !== packageVersion) {
+if (vueVersion && vueVersion !== packageVersion.match(/(.*?)(?:$|-)/)[1]) {
   throw new Error(
     '\n\nVue packages version mismatch:\n\n' +
     '- vue@' + vueVersion + '\n' +
